@@ -57,8 +57,20 @@ public abstract class BadgeShape {
      * @return the region the badge is drawn in
      */
     public Rect draw(@NonNull Canvas canvas, @NonNull Rect bounds, @NonNull Paint paint, int layoutDirection) {
-        float width = bounds.width() * scale;
-        float height = bounds.height() * scale;
+        return draw(canvas, bounds, paint, layoutDirection, 1.0f);
+    }
+
+    /**
+     * @param canvas          to draw on
+     * @param bounds          of the canvas
+     * @param paint           to draw with
+     * @param layoutDirection for gravity mapping
+     * @param borderScale
+     * @return the region the badge is drawn in
+     */
+    public Rect draw(@NonNull Canvas canvas, @NonNull Rect bounds, @NonNull Paint paint, int layoutDirection, float borderScale) {
+        float width = bounds.width() * scale * borderScale;
+        float height = bounds.height() * scale * borderScale;
         if (width < height * aspectRatio) {
             height = width / aspectRatio;
         } else {
@@ -67,6 +79,16 @@ public abstract class BadgeShape {
         applyGravity((int) width, (int) height, bounds, layoutDirection);
         onDraw(canvas, rect, paint);
         return rect;
+    }
+    /**
+     * @param canvas          to draw on
+     * @param bounds          of the canvas
+     * @param paint           to draw with
+     * @return the region the badge is drawn in
+     */
+    public Rect drawInsideBorder(@NonNull Canvas canvas, @NonNull Rect bounds, @NonNull Paint paint) {
+        onDraw(canvas, bounds, paint);
+        return bounds;
     }
 
     private void applyGravity(int width, int height, Rect bounds, int layoutDirection) {

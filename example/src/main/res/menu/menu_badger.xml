@@ -18,4 +18,21 @@
         android:icon="@drawable/ic_action_circle"
         android:title=""
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_oval_badged"
+        android:icon="@drawable/ic_action_oval"
+        android:title=""
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/action_square_badged"
+        android:icon="@drawable/ic_action_square"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_circle_badged"
+        android:icon="@drawable/ic_action_circle"
+        android:title=""
+        app:showAsAction="always" />
+
 </menu>

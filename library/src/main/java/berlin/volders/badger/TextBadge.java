@@ -42,9 +42,13 @@ public class TextBadge extends BadgeDrawable {
     private static final boolean WMATE = Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     private static final float MAGIC_TEXT_SCALE_FACTOR = 0.6f;
 
+    private static final float MAGIC_BORDER_SCALE_FACTOR = 0.95f;
+
+
     private final BadgeShape shape;
 
     private final Paint badgePaint = new Paint();
+    private final Paint borderPaint = new Paint();
     private final Paint textPaint = new Paint();
     private boolean paintPreparationNeeded = true;
 
@@ -68,7 +72,21 @@ public class TextBadge extends BadgeDrawable {
         this.shape = shape;
         badgePaint.setColor(badgeColor);
         textPaint.setColor(textColor);
+        borderPaint.setColor(badgeColor);
     }
+
+    /**
+     * @param shape      of the badge
+     * @param badgeColor to paint the badge shape with
+     * @param textColor  to paint the {@code count} with
+     */
+    protected TextBadge(@NonNull BadgeShape shape, @ColorInt int badgeColor, @ColorInt int textColor, @ColorInt int borderColor) {
+        this.shape = shape;
+        badgePaint.setColor(badgeColor);
+        textPaint.setColor(textColor);
+        borderPaint.setColor(borderColor);
+    }
+
 
     /**
      * @param paint to prepare for drawing the badge
@@ -98,11 +116,27 @@ public class TextBadge extends BadgeDrawable {
             onPrepareTextPaint(textPaint);
         }
 
-        Rect rect = shape.draw(canvas, getBounds(), badgePaint, getLayoutDirection());
+        Rect rectBorder = shape.draw(canvas, getBounds(), borderPaint, getLayoutDirection());
+        Rect rectBadge = scaleRect(getBounds(), MAGIC_BORDER_SCALE_FACTOR);
+        Rect rect = shape.drawInsideBorder(canvas, rectBadge, badgePaint);
+
+        float x = rectBorder.exactCenterX();
+        float y = rectBorder.exactCenterY() - (textPaint.ascent() + textPaint.descent()) * 0.5f;
         textPaint.setTextSize(rect.height() * MAGIC_TEXT_SCALE_FACTOR);
-        float x = rect.exactCenterX();
-        float y = rect.exactCenterY() - (textPaint.ascent() + textPaint.descent()) * 0.5f;
+
         canvas.drawText(text, x, y, textPaint);
+    }
+
+    public static final Rect scaleRect(Rect rectBorder, float magicBorderScaleFactor) {
+        Rect scaled = new Rect();
+        float scaledWidth = (1-magicBorderScaleFactor)*rectBorder.width()/2;
+        float scaledHeight = (1-magicBorderScaleFactor)*rectBorder.height()/2;
+        float left = rectBorder.left + scaledWidth;
+        float top = rectBorder.top + scaledWidth;
+        float right = rectBorder.right - scaledHeight;
+        float bottom = rectBorder.bottom - scaledHeight;
+        scaled.set((int)left, (int)top, (int)right, (int)bottom);
+        return scaled;
     }
 
     @Override
@@ -130,6 +164,7 @@ public class TextBadge extends BadgeDrawable {
         if (getAlpha() != alpha) {
             badgePaint.setAlpha(alpha);
             textPaint.setAlpha(alpha);
+            borderPaint.setAlpha(alpha);
             super.setAlpha(alpha);
         }
     }
@@ -140,6 +175,7 @@ public class TextBadge extends BadgeDrawable {
         if (getColorFilter() != colorFilter) {
             badgePaint.setColorFilter(colorFilter);
             textPaint.setColorFilter(colorFilter);
+            borderPaint.setColorFilter(colorFilter);
             super.setColorFilter(colorFilter);
         }
     }
@@ -226,6 +262,12 @@ public class TextBadge extends BadgeDrawable {
         protected final int textColor;
 
         /**
+         * The badge border color
+         */
+        @ColorInt
+        protected final int borderColor;
+
+        /**
          * @param context to read themed colors from
          * @param shape   of the badge
          */
@@ -242,6 +284,20 @@ public class TextBadge extends BadgeDrawable {
             this.shape = shape;
             this.badgeColor = badgeColor;
             this.textColor = textColor;
+            this.borderColor = badgeColor;
+        }
+
+        /**
+         * @param shape      of the badge
+         * @param badgeColor to paint the badge shape with
+         * @param textColor  to paint the {@code count} with
+         * @param borderColor to paint the border around badge with
+         */
+        public Factory(@NonNull BadgeShape shape, @ColorInt int badgeColor, @ColorInt int textColor, @ColorInt int borderColor) {
+            this.shape = shape;
+            this.badgeColor = badgeColor;
+            this.textColor = textColor;
+            this.borderColor = borderColor;
         }
     }
 }

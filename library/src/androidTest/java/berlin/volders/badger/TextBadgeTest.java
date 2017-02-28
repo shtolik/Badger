@@ -28,6 +28,7 @@ public class TextBadgeTest {
     final TestBadgeShape shape = new TestBadgeShape(1, 1, 0);
     final int badgeColor = 0xff654321;
     final int textColor = 0xff123456;
+    final int borderColor = 0xff123456;
 
     TextBadge badge;
 
@@ -103,5 +104,22 @@ public class TextBadgeTest {
         assertThat(factory.shape, is((BadgeShape) shape));
         assertThat(factory.badgeColor, is(badgeColor));
         assertThat(factory.textColor, is(textColor));
+        assertThat(factory.borderColor, is(badgeColor));
+    }
+
+    @Test
+    public void FactoryBordered() throws Exception {
+        TextBadge.Factory<TextBadge> factory
+                = new TextBadge.Factory<TextBadge>(shape, badgeColor, textColor, borderColor) {
+            @Override
+            public TextBadge createBadge() {
+                return null;
+            }
+        };
+
+        assertThat(factory.shape, is((BadgeShape) shape));
+        assertThat(factory.badgeColor, is(badgeColor));
+        assertThat(factory.textColor, is(textColor));
+        assertThat(factory.borderColor, is(borderColor));
     }
 }

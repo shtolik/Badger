@@ -43,10 +43,19 @@ public class CountBadge extends TextBadge {
      * @param textColor  to paint the {@code count} with
      */
     public CountBadge(@NonNull BadgeShape shape, @ColorInt int badgeColor, @ColorInt int textColor) {
-        super(shape, badgeColor, textColor);
+        super(shape, badgeColor, textColor, badgeColor);
     }
 
-    /**
+	/**
+	 * @param shape      of the badge
+	 * @param badgeColor to paint the badge shape with
+	 * @param textColor  to paint the {@code count} with
+	 */
+	public CountBadge(@NonNull BadgeShape shape, @ColorInt int badgeColor, @ColorInt int textColor, @ColorInt int borderColor) {
+		super(shape, badgeColor, textColor, borderColor);
+	}
+
+	/**
      * Sets the {@code count} for this badge
      *
      * @param count to display
@@ -91,9 +100,19 @@ public class CountBadge extends TextBadge {
             super(shape, badgeColor, textColor);
         }
 
+        /**
+         * @param shape      of the badge
+         * @param badgeColor to paint the badge shape with
+         * @param textColor  to paint the {@code count} with
+         * @param borderColor to paint the border around badge with
+         */
+        public Factory(@NonNull BadgeShape shape, @ColorInt int badgeColor, @ColorInt int textColor, @ColorInt int borderColor) {
+            super(shape, badgeColor, textColor, borderColor);
+        }
+
         @Override
         public CountBadge createBadge() {
-            return new CountBadge(shape, badgeColor, textColor);
+            return new CountBadge(shape, badgeColor, textColor, borderColor);
         }
     }
 }

@@ -17,6 +17,7 @@
 package berlin.volders.badger.example;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,6 +33,9 @@ public class BadgerActivity extends AppCompatActivity {
     CountBadge.Factory ovalFactory;
     CountBadge.Factory squareFactory;
     CountBadge.Factory circleFactory;
+    CountBadge.Factory ovalBadgedFactory;
+    CountBadge.Factory squareBadgedFactory;
+    CountBadge.Factory circleBadgedFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,19 @@ public class BadgerActivity extends AppCompatActivity {
         ovalFactory = new CountBadge.Factory(this, BadgeShape.oval(1f, 2f, Gravity.BOTTOM));
         squareFactory = new CountBadge.Factory(this, BadgeShape.square(1f, Gravity.NO_GRAVITY, .5f));
         circleFactory = new CountBadge.Factory(this, BadgeShape.circle(.5f, Gravity.END | Gravity.TOP));
+
+        ovalBadgedFactory = new CountBadge.Factory(BadgeShape.oval(1f, 2f, Gravity.BOTTOM)
+                , ContextCompat.getColor(this, android.R.color.black)
+                , ContextCompat.getColor(this, android.R.color.white)
+                , ContextCompat.getColor(this, android.R.color.white));
+        squareBadgedFactory = new CountBadge.Factory(BadgeShape.square(1f, Gravity.NO_GRAVITY, .5f)
+                , ContextCompat.getColor(this, android.R.color.black)
+                , ContextCompat.getColor(this, android.R.color.white)
+                , ContextCompat.getColor(this, android.R.color.white));
+        circleBadgedFactory = new CountBadge.Factory(BadgeShape.circle(.5f, Gravity.END | Gravity.TOP)
+                , ContextCompat.getColor(this, android.R.color.black)
+                , ContextCompat.getColor(this, android.R.color.white)
+                , ContextCompat.getColor(this, android.R.color.white));
     }
 
     @Override
@@ -48,6 +65,9 @@ public class BadgerActivity extends AppCompatActivity {
         Badger.sett(menu.findItem(R.id.action_oval), ovalFactory).setCount(0);
         Badger.sett(menu.findItem(R.id.action_square), squareFactory).setCount(0);
         Badger.sett(menu.findItem(R.id.action_circle), circleFactory).setCount(0);
+        Badger.sett(menu.findItem(R.id.action_oval_badged), ovalBadgedFactory).setCount(0);
+        Badger.sett(menu.findItem(R.id.action_square_badged), squareBadgedFactory).setCount(0);
+        Badger.sett(menu.findItem(R.id.action_circle_badged), circleBadgedFactory).setCount(0);
         return true;
     }
 
@@ -57,6 +77,9 @@ public class BadgerActivity extends AppCompatActivity {
             case R.id.action_oval:
             case R.id.action_square:
             case R.id.action_circle:
+            case R.id.action_oval_badged:
+            case R.id.action_square_badged:
+            case R.id.action_circle_badged:
                 // factory is not used for getting the badge
                 //noinspection ConstantConditions
                 CountBadge badge = Badger.sett(item, null);
