@@ -68,6 +68,8 @@ public class BadgerActivity extends AppCompatActivity {
         Badger.sett(menu.findItem(R.id.action_oval_badged), ovalBadgedFactory).setCount(0);
         Badger.sett(menu.findItem(R.id.action_square_badged), squareBadgedFactory).setCount(0);
         Badger.sett(menu.findItem(R.id.action_circle_badged), circleBadgedFactory).setCount(0);
+
+        Badger.sett(menu.findItem(R.id.action_layout), circleBadgedFactory).setCount(0);
         return true;
     }
 
@@ -80,6 +82,7 @@ public class BadgerActivity extends AppCompatActivity {
             case R.id.action_oval_badged:
             case R.id.action_square_badged:
             case R.id.action_circle_badged:
+            case R.id.action_layout:
                 // factory is not used for getting the badge
                 //noinspection ConstantConditions
                 CountBadge badge = Badger.sett(item, null);
