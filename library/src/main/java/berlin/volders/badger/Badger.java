@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import java.security.InvalidParameterException;
+
 /**
  * Utility to wrap a drawable with a badge on it.
  */
@@ -91,7 +93,13 @@ public class Badger<T extends BadgeDrawable> {
      */
     public static <T extends BadgeDrawable> T
     sett(@NonNull MenuItem item, @NonNull BadgeDrawable.Factory<? extends T> factory) {
-        Badger<T> badger = sett(item.getIcon(), factory);
+        Drawable icon = item.getIcon();
+        if (icon == null){
+            //no icon defined for menuItem, may be it's in actionLayout of menu item?
+            //TODO: get drawable out of item.getActionView(), but it can be anywhere
+            throw new InvalidParameterException("Can't find drawable of menuItem");
+        }
+        Badger<T> badger = sett(icon, factory);
         item.setIcon(badger.drawable);
         return badger.badge;
     }
