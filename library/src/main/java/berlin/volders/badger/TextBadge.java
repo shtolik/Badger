@@ -42,7 +42,7 @@ public class TextBadge extends BadgeDrawable {
     private static final boolean WMATE = Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     private static final float MAGIC_TEXT_SCALE_FACTOR = 0.6f;
 
-    private static final float MAGIC_BORDER_SCALE_FACTOR = 0.95f;
+    private static final float MAGIC_BORDER_SCALE_FACTOR = 0.9f;
 
 
     private final BadgeShape shape;
@@ -113,21 +113,26 @@ public class TextBadge extends BadgeDrawable {
         if (paintPreparationNeeded) {
             paintPreparationNeeded = false;
             onPrepareBadgePaint(badgePaint);
+            onPrepareBadgePaint(borderPaint);
             onPrepareTextPaint(textPaint);
         }
 
-        Rect rectBorder = shape.draw(canvas, getBounds(), borderPaint, getLayoutDirection());
-        Rect rectBadge = scaleRect(getBounds(), MAGIC_BORDER_SCALE_FACTOR);
-        Rect rect = shape.drawInsideBorder(canvas, rectBadge, badgePaint);
+        Rect rect = shape.draw(canvas, getBounds(), borderPaint, getLayoutDirection());
 
-        float x = rectBorder.exactCenterX();
-        float y = rectBorder.exactCenterY() - (textPaint.ascent() + textPaint.descent()) * 0.5f;
+        if (badgePaint.getColor() != borderPaint.getColor()) {
+            Rect rectBadge = scaleRect(rect, MAGIC_BORDER_SCALE_FACTOR);
+            shape.drawInsideBorder(canvas, rectBadge, badgePaint);
+        }
+
+        //need to set text size before calculating textPaint's ascent/descent
         textPaint.setTextSize(rect.height() * MAGIC_TEXT_SCALE_FACTOR);
+        float x = rect.exactCenterX();
+        float y = rect.exactCenterY() - (textPaint.ascent() + textPaint.descent()) * 0.5f;
 
         canvas.drawText(text, x, y, textPaint);
     }
 
-    public static final Rect scaleRect(Rect rectBorder, float magicBorderScaleFactor) {
+    public static Rect scaleRect(Rect rectBorder, float magicBorderScaleFactor) {
         Rect scaled = new Rect();
         float scaledWidth = (1-magicBorderScaleFactor)*rectBorder.width()/2;
         float scaledHeight = (1-magicBorderScaleFactor)*rectBorder.height()/2;
